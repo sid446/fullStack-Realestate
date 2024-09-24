@@ -57,12 +57,9 @@ export default function Header() {
           <div className='flex justify-end items-center flex-1'>
           <ul className="flex ">
             <Link to='/sign-in'>
-              <img src={login} className='w-5 h-5 cursor-pointer ' alt="" />
+              <img src={login} className='w-5 h-5 cursor-pointer mx-5 ' alt="" />
             </Link>
-            <Link to='/sign-up'>
-            <img src={addUser} className='w-5 h-5 mx-8 cursor-pointer ' alt="" />
-             
-            </Link>
+            
           </ul>
 
             <img ref={searchRef}

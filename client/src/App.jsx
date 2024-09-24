@@ -6,10 +6,13 @@ import About from './pages/About.jsx'
 import SignUp from './pages/SignUp.jsx'
 import Profile from './pages/Profile.jsx'
 import Header from './components/Header.jsx'
+ import './whole.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <div className="h-screen overflow-y-scroll no-scrollbar">
+      
+      <BrowserRouter>
     <Header/>
       <Routes>
         <Route path="/" element={<Home/>}/>
@@ -19,6 +22,11 @@ export default function App() {
         <Route path="/profile" element={<Profile/>}/>
       </Routes>
     </BrowserRouter>
+      
+    </div>
+  
+    
+
    
    
   )
