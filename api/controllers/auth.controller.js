@@ -56,7 +56,7 @@ export const signIn =async(req,res,next)=>{
          const token=jwt.sign({id:validUser._id},process.env.JWT_SECRET)
 
         const {password:pas,...rest}=validUser._doc//not showing the password
-        res.cookie('acces_token',token,{httpOnly:true}).status(200).json(rest);
+        res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest);
 
     } catch (error) {
         return next(new ApiError(500,"An error occurred while signing in"))
