@@ -1,25 +1,27 @@
-import React, { useState } from 'react'; // Add useState import
+import React, { useState } from 'react';
 import backgroundSignUp from '../assets/images/bgs.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import google from '../assets/images/google.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice.js';
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Make sure it's invoked as a function
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value, // Set the changing input's value
+      [e.target.id]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh
+    e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
@@ -29,20 +31,16 @@ export default function SignIn() {
       });
       const data = await res.json();
       console.log(data);
-      if (data.success==false) {
-        setLoading(false);
-        setError(data.message); // Display error message from ApiError
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
-      navigate('/'); // If everything is fine, navigate to home
+      dispatch(signInSuccess(data));
+      navigate('/');
     } catch (error) {
-      setLoading(false);
-      setError(error.message); // Display general error message
+      dispatch(signInFailure(error.message));
     }
   };
-  
 
   return (
     <div
@@ -56,16 +54,20 @@ export default function SignIn() {
           <input
             className="rounded-full bg-transparent border-2 border-white text-white placeholder-white focus:outline-none placeholder:text-lg p-3 w-[20rem]"
             id="email"
-            type="text"
+            type="email"
             placeholder="Email"
+            value={formData.email}
             onChange={handleChange}
+            required
           />
           <input
             className="rounded-full bg-transparent border-2 border-white text-white placeholder-white focus:outline-none placeholder:text-lg p-3 w-[20rem]"
             id="password"
-            type="password" // Corrected to 'password'
+            type="password"
             placeholder="Password"
+            value={formData.password}
             onChange={handleChange}
+            required
           />
           <button
             disabled={loading}
@@ -79,7 +81,7 @@ export default function SignIn() {
             <img
               className="w-7 h-7 items-center"
               src={google}
-              alt="Google sign-in" // Added alt description
+              alt="Google sign-in"
             />
             Sign In with Google
           </span>
