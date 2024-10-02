@@ -3,12 +3,14 @@ import search from "../assets/images/search.png";
 import addUser from "../assets/images/add-user.png"
 import login from "../assets/images/log-in.png"
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function Header() {
   const [searchOn, setSearchOn] = useState(false);
   const formRef = useRef(null);
   const middleDivRef = useRef(null);
   const searchRef=useRef(null);
+  const {currentUser}=useSelector(state=>state.user)
 
   function handleSearchClick() {
     setSearchOn(!searchOn);
@@ -41,11 +43,11 @@ export default function Header() {
 
   return (
     <>
-      <header className='bg-slate-200 shadow-md'>
+      <header className='bg-[#17242A]  w-[100vw] h-[8vh] shadow-md'>
         <div className='flex flex-wrap justify-between items-center mx-auto p-3'>
           {/* Empty div for centering */}
           <div className='flex-1'></div>
-
+          <Link to="/">
           <div ref={middleDivRef} className='flex justify-center items-center flex-1'>
             <h1 className='font-bold text-sm sm:text-xl'>
               <span className='text-slate-500 text-2xl'>B</span>
@@ -53,12 +55,22 @@ export default function Header() {
               <span className='text-slate-500 text-2xl'>B</span>
             </h1>
           </div>
+          </Link>
 
           <div className='flex justify-end items-center flex-1'>
+           
           <ul className="flex ">
-            <Link to='/sign-in'>
-              <img src={login} className='w-5 h-5 cursor-pointer mx-5 ' alt="" />
-            </Link>
+          {currentUser ? (
+              // Render Profile Icon when user is logged in
+              <Link to='/about'>
+                <img src={currentUser.avatar} className='w-5 h-5 cursor-pointer mx-5' alt="Profile" />
+              </Link>
+            ) : (
+              // Render Login Icon when user is not logged in
+              <Link to='/sign-in'>
+                <img src={login} className='w-5 h-5 cursor-pointer mx-5' alt="Login" />
+              </Link>
+            )}
             
           </ul>
 

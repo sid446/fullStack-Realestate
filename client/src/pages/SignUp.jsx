@@ -8,16 +8,14 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value, // Set the changing input's value
+      [e.target.id]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh
+    e.preventDefault();
     try {
       setLoading(true);
       const res = await fetch('/api/auth/signup', {
@@ -27,23 +25,27 @@ export default function SignUp() {
         },
         body: JSON.stringify(formData),
       });
+  
       const data = await res.json();
-      console.log(data);
-      if (!data.success) {
+      console.log('Response:', res);
+      console.log('Data:', data);
+  
+      if (!res.ok) {
         setLoading(false);
-        setError(data.message); // Display error message from ApiError
+        setError(data.message || 'Something went wrong');
         return;
       }
+  
       setLoading(false);
       setError(null);
-      navigate('/sign-in'); // If everything is fine, navigate to sign-in
+      navigate('/sign-in');
     } catch (error) {
       setLoading(false);
-      setError(error.message); // Display general error message
+      setError(error.message || 'Network error');
     }
   };
-
-  console.log(formData);
+  
+  
 
   return (
     <div

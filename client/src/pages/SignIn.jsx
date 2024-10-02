@@ -9,7 +9,7 @@ export default function SignIn() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Make sure it's invoked as a function
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -30,13 +30,17 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
-      if (data.success === false) {
+      console.log(data); // Debugging line to check the response structure
+
+      // Check for API response and handle success/failure
+      if (!data.success) {
         dispatch(signInFailure(data.message));
         return;
       }
-      dispatch(signInSuccess(data));
-      navigate('/');
+
+      // Ensure you're dispatching the correct user object
+      dispatch(signInSuccess(data.user)); // Assuming data.user contains the user object
+      navigate('/'); // Navigate after successful sign-in
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
